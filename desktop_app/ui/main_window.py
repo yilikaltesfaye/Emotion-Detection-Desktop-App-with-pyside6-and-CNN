@@ -1,12 +1,7 @@
 import time
 from PySide6.QtWidgets import (
-    QMainWindow,
-    QWidget,
-    QHBoxLayout,
-    QVBoxLayout,
-    QLabel,
-    QPushButton,
-    QFileDialog,
+    QMainWindow, QWidget, QHBoxLayout, QVBoxLayout,
+    QLabel, QPushButton, QFileDialog
 )
 from PySide6.QtCore import QTimer, Qt
 import cv2
@@ -14,8 +9,6 @@ import cv2
 from camera.webcam import Webcam
 from detection.face_detector import FaceDetector
 from models.emotion_model import EmotionModel
-from utils.logger import CSVLogger
-from utils.session import SessionManager
 from utils.display import frame_to_pixmap, scale_pixmap
 
 EMOTION_LABELS = ["Angry", "Disgust", "Fear", "Happy", "Neutral", "Sad", "Surprise"]
@@ -31,8 +24,6 @@ class MainWindow(QMainWindow):
         self.webcam = Webcam()
         self.face_detector = FaceDetector(face_cascade_path)
         self.emotion_model = EmotionModel(model_path, EMOTION_LABELS)
-        self.logger = CSVLogger()
-        self.session = SessionManager(EMOTION_LABELS)
 
         # UI state
         self.is_image_mode = False
@@ -74,18 +65,6 @@ class MainWindow(QMainWindow):
         right_layout.addWidget(self.upload_button)
         right_layout.addWidget(self.exit_button)
 
-        # Logging buttons
-        right_layout.addWidget(QLabel("--- CSV Logging ---"))
-        self.start_log_button = QPushButton("Start Logging")
-        self.stop_log_button = QPushButton("Stop Logging")
-        right_layout.addWidget(self.start_log_button)
-        right_layout.addWidget(self.stop_log_button)
-
-        # Session controls
-        right_layout.addWidget(QLabel("--- Session ---"))
-        self.reset_button = QPushButton("Reset Session")
-        right_layout.addWidget(self.reset_button)
-
         # Results
         right_layout.addWidget(QLabel("--- Detection Results ---"))
         self.emotion_label = QLabel("Emotion: --")
@@ -93,13 +72,9 @@ class MainWindow(QMainWindow):
         right_layout.addWidget(self.emotion_label)
         right_layout.addWidget(self.confidence_label)
 
-        # Session stats
-        right_layout.addWidget(QLabel("--- Session Stats ---"))
-        self.session_timer_label = QLabel("Session Time: 0s")
-        self.dominant_emotion_label = QLabel("Dominant Emotion: --")
+        # FPS stats
+        right_layout.addWidget(QLabel("--- FPS Stats ---"))
         self.fps_label = QLabel("FPS: --")
-        right_layout.addWidget(self.session_timer_label)
-        right_layout.addWidget(self.dominant_emotion_label)
         right_layout.addWidget(self.fps_label)
 
         right_layout.addStretch()
@@ -112,9 +87,6 @@ class MainWindow(QMainWindow):
         self.start_button.clicked.connect(self.start_camera)
         self.stop_button.clicked.connect(self.stop_camera)
         self.upload_button.clicked.connect(self.upload_image)
-        self.start_log_button.clicked.connect(self.logger.start)
-        self.stop_log_button.clicked.connect(self.logger.stop)
-        self.reset_button.clicked.connect(self.reset_session)
 
     def start_camera(self):
         self.is_image_mode = False
@@ -126,9 +98,6 @@ class MainWindow(QMainWindow):
             self.display_label.setText("Error: Cannot open camera")
             return
 
-        if not self.session.session_active:
-            self.session.start()
-
         self.timer.start(30)
         self.frame_count = 0
         self.fps_timer = time.time()
@@ -139,20 +108,9 @@ class MainWindow(QMainWindow):
         self.is_image_mode = False
         self.static_image = None
         self.display_label.setText("Camera Feed Placeholder")
-        if self.session.session_active:
-            self.session.stop()
-        self.update_session_display()
-
-    def reset_session(self):
-        if self.logger.is_logging:
-            self.logger.stop()
-        self.session.reset()
         self.emotion_label.setText("Emotion: --")
         self.confidence_label.setText("Confidence: --")
-        self.dominant_emotion_label.setText("Dominant Emotion: --")
-        self.update_session_display()
-        if self.webcam.is_opened():
-            self.session.start()
+        self.fps_label.setText("FPS: --")
 
     def upload_image(self):
         file_path, _ = QFileDialog.getOpenFileName(
@@ -179,7 +137,7 @@ class MainWindow(QMainWindow):
 
         if has_face and faces:
             for x, y, w, h in faces:
-                face_roi = gray[y : y + h, x : x + w]
+                face_roi = gray[y:y + h, x:x + w]
                 emotion_idx, confidence = self.emotion_model.predict(face_roi)
                 emotion_text = EMOTION_LABELS[emotion_idx]
                 cv2.putText(
@@ -193,6 +151,9 @@ class MainWindow(QMainWindow):
                 )
                 self.emotion_label.setText(f"Emotion: {emotion_text}")
                 self.confidence_label.setText(f"Confidence: {confidence:.2f}")
+        else:
+            self.emotion_label.setText("Emotion: --")
+            self.confidence_label.setText("Confidence: --")
 
         pixmap = frame_to_pixmap(annotated_frame)
         scaled = scale_pixmap(pixmap, self.display_label.size())
@@ -211,20 +172,17 @@ class MainWindow(QMainWindow):
             # Run emotion inference
             run_inference = self.emotion_model.should_run_inference()
 
+            emotion_found = False
             for x, y, w, h in faces:
                 if has_face and run_inference:
-                    face_roi = gray[y : y + h, x : x + w]
+                    face_roi = gray[y:y + h, x:x + w]
                     emotion_idx, confidence = self.emotion_model.predict(face_roi)
-
-                    # Update session
-                    smoothed_emotion, smoothed_confidence = self.session.update(
-                        emotion_idx, confidence
-                    )
+                    emotion_text = EMOTION_LABELS[emotion_idx]
 
                     # Display emotion on frame
                     cv2.putText(
                         annotated_frame,
-                        smoothed_emotion,
+                        emotion_text,
                         (x, y - 10),
                         cv2.FONT_HERSHEY_SIMPLEX,
                         0.8,
@@ -233,17 +191,13 @@ class MainWindow(QMainWindow):
                     )
 
                     # Update UI
-                    self.emotion_label.setText(f"Emotion: {smoothed_emotion}")
-                    self.confidence_label.setText(f"Confidence: {smoothed_confidence:.2f}")
+                    self.emotion_label.setText(f"Emotion: {emotion_text}")
+                    self.confidence_label.setText(f"Confidence: {confidence:.2f}")
+                    emotion_found = True
 
-                    # Log to CSV
-                    if self.logger.is_logging:
-                        self.logger.log(
-                            smoothed_emotion, smoothed_confidence, self.session.get_elapsed_time()
-                        )
-
-            # Update session display
-            self.update_session_display()
+            if not emotion_found:
+                self.emotion_label.setText("Emotion: --")
+                self.confidence_label.setText("Confidence: --")
 
             # FPS calculation
             self.frame_count += 1
@@ -258,13 +212,6 @@ class MainWindow(QMainWindow):
             scaled = scale_pixmap(pixmap, self.display_label.size())
             self.display_label.setPixmap(scaled)
 
-    def update_session_display(self):
-        elapsed = self.session.get_elapsed_time()
-        self.session_timer_label.setText(f"Session Time: {elapsed}s")
-        dominant = self.session.get_dominant_emotion()
-        self.dominant_emotion_label.setText(f"Dominant Emotion: {dominant}")
-
     def closeEvent(self, event):
-        self.logger.stop()
         self.stop_camera()
         event.accept()
