@@ -42,7 +42,7 @@ class ProcessingWorker(QThread):
         # ---------- Emotion classifier (ONNX) ----------
         self.session = ort.InferenceSession(emotion_model_path, providers=["CPUExecutionProvider"])
         self.input_name = self.session.get_inputs()[0].name
-        self.emotions = ["anger", "disgust", "fear", "happy", "neutral", "sad", "surprise"]
+        self.emotions = ["Angry", "Disgust", "Fear", "Happy", "Neutral", "Sad", "Surprise"]
 
     def run(self):
         # Try DirectShow for better resolution support on Windows
@@ -72,7 +72,7 @@ class ProcessingWorker(QThread):
             self.detector.setInputSize((w, h))
             _, faces = self.detector.detect(frame)
 
-            emotion, conf = "neutral", 0.0
+            emotion, conf = "Neutral", 0.0
 
             if faces is not None:
                 for face in faces:
@@ -114,7 +114,7 @@ class ProcessingWorker(QThread):
 class MainWindow(QMainWindow):
     def __init__(self, emotion_model_path):
         super().__init__()
-        self.setWindowTitle("Emotion Monitor")
+        self.setWindowTitle("Real-Time Facial Emotion Detection App")
         self.resize(1000, 700)  # Comfortable default size
 
         # Central widget with main layout
@@ -134,7 +134,7 @@ class MainWindow(QMainWindow):
         # ---- Bottom panel (emotion info + exit button) ----
         bottom_panel = QHBoxLayout()
 
-        self.emo_label = QLabel("Emotion: --\nConfidence: --")
+        self.emo_label = QLabel("Emotion: N/A\nConfidence: N/A")
         self.emo_label.setFont(QFont("Segoe UI", 16))
         self.emo_label.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
         bottom_panel.addWidget(self.emo_label, 1)
