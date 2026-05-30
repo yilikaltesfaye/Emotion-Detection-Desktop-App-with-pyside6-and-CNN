@@ -1,5 +1,4 @@
-import tensorflow as tf
+import mediapipe as mp
 
-model = tf.keras.models.load_model("models_store/emotion_cnn.keras")  # change path if needed
-print("Input shape:", model.input_shape)
-print("Output shape:", model.output_shape)
+print(mp.__file__)
+print(dir(mp))
