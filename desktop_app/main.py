@@ -21,6 +21,17 @@ from PySide6.QtWidgets import (
 from PySide6.QtCore import QThread, Signal, Slot, Qt
 from PySide6.QtGui import QImage, QPixmap, QFont, QAction
 
+
+def resource_path(relative_path):
+    """Get absolute path to resource, works for dev and for PyInstaller"""
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
+
+
 # Suppress noisy TensorFlow/MediaPipe logs (optional)
 os.environ["TF_ENABLE_ONEDNN_OPTS"] = "0"
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
@@ -59,7 +70,9 @@ class ProcessingWorker(QThread):
     frame_ready = Signal(np.ndarray)
     results_ready = Signal(str, float)
 
-    def __init__(self, emotion_model_path, yunet_model_path="models_store/yunet.onnx"):
+    def __init__(
+        self, emotion_model_path, yunet_model_path=resource_path("models_store/yunet.onnx")
+    ):
         super().__init__()
         self.running = True
 
@@ -74,18 +87,7 @@ class ProcessingWorker(QThread):
         )
 
         # ---------- Emotion classifier (ONNX) ----------
-        available = ort.get_available_providers()
-
-        providers = []
-
-        if "CUDAExecutionProvider" in available:
-            providers.append("CUDAExecutionProvider")
-
-        providers.append("CPUExecutionProvider")
-
-        logging.info(f"ONNX Providers: {providers}")
-
-        self.session = ort.InferenceSession(emotion_model_path, providers=providers)
+        self.session = ort.InferenceSession(emotion_model_path, providers=["CPUExecutionProvider"])
         self.input_name = self.session.get_inputs()[0].name
         self.emotions = ["Angry", "Disgust", "Fear", "Happy", "Neutral", "Sad", "Surprise"]
         self.emotion_buffer = deque(maxlen=30)
@@ -95,25 +97,21 @@ class ProcessingWorker(QThread):
 
         face_resized = cv2.resize(face_roi, (128, 128))
 
-        img_float = face_resized.astype(np.float32) / 255.0
+        img_float = cv2.cvtColor(face_resized, cv2.COLOR_BGR2RGB).astype(np.float32) / 255.0
+
         mean = np.array([0.485, 0.456, 0.406], dtype=np.float32)
         std = np.array([0.229, 0.224, 0.225], dtype=np.float32)
 
-        img_norm = img_float
+        img_norm = (img_float - mean) / std
 
         input_tensor = img_norm.transpose(2, 0, 1).reshape(1, 3, 128, 128)
-
         outputs = self.session.run(None, {self.input_name: input_tensor})
 
-        logits = outputs[0]
+        probs = np.exp(outputs[0]) / np.sum(np.exp(outputs[0]))
 
-        exp_logits = np.exp(logits - np.max(logits, axis=1, keepdims=True))
+        idx = np.argmax(probs)
 
-        probs = exp_logits / np.sum(exp_logits, axis=1, keepdims=True)
-
-        idx = int(np.argmax(probs[0]))
-
-        return (self.emotions[idx], float(probs[0][idx]))
+        return (self.emotions[idx], float(np.max(probs)))
 
     def run(self):
         # Try DirectShow for better resolution support on Windows
@@ -151,33 +149,19 @@ class ProcessingWorker(QThread):
                     x, y = max(0, x), max(0, y)
                     fw, fh = min(fw, w - x), min(fh, h - y)
 
-                    margin = 0.15
-
-                    x1 = max(0, int(x - fw * margin))
-                    y1 = max(0, int(y - fh * margin))
-
-                    x2 = min(w, int(x + fw * (1 + margin)))
-                    y2 = min(h, int(y + fh * (1 + margin)))
-
-                    face_roi = frame[y1:y2, x1:x2]
+                    face_roi = frame[y : y + fh, x : x + fw]
 
                     if face_roi.size > 0:
                         current_emotion, current_conf = self.predict_emotion(face_roi)
+                        self.emotion_buffer.append(current_emotion)
+                        emotion = Counter(self.emotion_buffer).most_common(1)[0][0]
 
-                        self.emotion_buffer.append((current_emotion, current_conf))
-
-                        emotion_counts = Counter(e for e, _ in self.emotion_buffer)
-
-                        emotion = emotion_counts.most_common(1)[0][0]
-
-                        matching_conf = [c for e, c in self.emotion_buffer if e == emotion]
-
-                        conf = float(np.mean(matching_conf))
+                        conf = current_conf
                         if emotion != self.last_logged_emotion:
                             logging.info(f"Detected Emotion Changed -> {emotion} ({conf:.2%})")
                             self.last_logged_emotion = emotion
 
-                        cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
+                        cv2.rectangle(frame, (x, y), (x + fw, y + fh), (0, 255, 0), 2)
 
             self.frame_ready.emit(frame)
             self.results_ready.emit(emotion, conf)
@@ -341,9 +325,8 @@ Made in University of  Gondar, Ethiopia, 2026
             return
 
         h, w, _ = image.shape
-
         upload_detector = cv2.FaceDetectorYN.create(
-            model="models_store/yunet.onnx",
+            model=resolved_yunet_path,
             config="",
             input_size=(320, 320),
             score_threshold=0.5,
@@ -351,6 +334,7 @@ Made in University of  Gondar, Ethiopia, 2026
             top_k=5000,
         )
 
+        resolved_yunet_path = resource_path("models_store/yunet.onnx")
         upload_detector.setInputSize((w, h))
         _, faces = upload_detector.detect(image)
 
@@ -363,20 +347,13 @@ Made in University of  Gondar, Ethiopia, 2026
 
             x, y, fw, fh = face[0:4].astype(int)
 
-            margin = 0.15
+            face_roi = image[y : y + fh, x : x + fw]
 
-            x1 = max(0, int(x - fw * margin))
-            y1 = max(0, int(y - fh * margin))
-
-            x2 = min(w, int(x + fw * (1 + margin)))
-            y2 = min(h, int(y + fh * (1 + margin)))
-
-            face_roi = image[y1:y2, x1:x2]
             if face_roi.size > 0:
 
                 emotion, confidence = self.worker.predict_emotion(face_roi)
 
-                cv2.rectangle(image, (x1, y1), (x2, y2), (0, 255, 0), 2)
+                cv2.rectangle(image, (x, y), (x + fw, y + fh), (0, 255, 0), 2)
 
         self.update_text(emotion, confidence)
 
@@ -409,7 +386,7 @@ Made in University of  Gondar, Ethiopia, 2026
 
 
 if __name__ == "__main__":
-    MODEL_PATH = "models_store/V6/best_fer_student.onnx"
+    MODEL_PATH = resource_path("models_store/V7/best_fer_student.onnx")
     app = QApplication(sys.argv)
     window = MainWindow(MODEL_PATH)
     window.show()  # Normal window, not fullscreen
