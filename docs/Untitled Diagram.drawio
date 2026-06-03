@@ -1,0 +1,80 @@
+<mxfile host="Electron">
+  <diagram name="Page-1" id="J1OUSbyx_z1rxtLIOjjZ">
+    <mxGraphModel dx="1152" dy="1387" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="G02KTmdfzVyyEF8a8Sc3-8" edge="1" parent="1" source="G02KTmdfzVyyEF8a8Sc3-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeWidth=3;fontSize=13;" target="G02KTmdfzVyyEF8a8Sc3-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="G02KTmdfzVyyEF8a8Sc3-1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=3;fontSize=13;fontStyle=1" value="MAIN HRAPHICAL USER INTERACE THREAD&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="320" width="510" x="130" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="G02KTmdfzVyyEF8a8Sc3-5" parent="1" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=3;fontSize=13;fontStyle=1" value="&lt;div&gt;ISOLATED BACKGROUND COMPUTATION THREAD&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="320" width="510" x="130" y="472" as="geometry" />
+        </mxCell>
+        <mxCell id="G02KTmdfzVyyEF8a8Sc3-19" edge="1" parent="1" source="G02KTmdfzVyyEF8a8Sc3-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeWidth=3;fontSize=13;" target="G02KTmdfzVyyEF8a8Sc3-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="G02KTmdfzVyyEF8a8Sc3-3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=3;fontSize=13;" value="MainWindow (PySide6)" vertex="1">
+          <mxGeometry height="60" width="320" x="215" y="150" as="geometry" />
+        </mxCell>
+        <mxCell id="G02KTmdfzVyyEF8a8Sc3-4" parent="1" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=3;fontSize=14;" value="&lt;div&gt;Loads Window UI Layout (1000x700 Canvas)&lt;/div&gt;&lt;div&gt;Paints Live Scaling QPixmap Display&lt;/div&gt;&lt;div&gt;Updates HUD Overlay (Emotion + Confidence %)&amp;nbsp;&amp;nbsp;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="100" width="320" x="215" y="240" as="geometry" />
+        </mxCell>
+        <mxCell id="G02KTmdfzVyyEF8a8Sc3-12" edge="1" parent="1" source="G02KTmdfzVyyEF8a8Sc3-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeWidth=3;fontSize=13;" target="G02KTmdfzVyyEF8a8Sc3-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="G02KTmdfzVyyEF8a8Sc3-6" parent="1" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=3;fontSize=13;" value="[ProcessingWorker (QThread)]   " vertex="1">
+          <mxGeometry height="60" width="402.5" x="183.75" y="515" as="geometry" />
+        </mxCell>
+        <mxCell id="G02KTmdfzVyyEF8a8Sc3-15" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeWidth=3;fontSize=13;" target="G02KTmdfzVyyEF8a8Sc3-10">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="310" y="715" />
+            </Array>
+            <mxPoint x="310" y="682" as="sourcePoint" />
+            <mxPoint x="390" y="722.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="G02KTmdfzVyyEF8a8Sc3-16" edge="1" parent="1" source="G02KTmdfzVyyEF8a8Sc3-7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeWidth=3;fontSize=13;" target="G02KTmdfzVyyEF8a8Sc3-11">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="310" y="765" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="G02KTmdfzVyyEF8a8Sc3-7" parent="1" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=3;fontSize=13;" value="1. Ingests Raw Webcam Frame (cv2.VideoCapture)&lt;div&gt;2. Runs Facial Region Localization (YuNet Engine)&lt;/div&gt;&lt;div&gt;3. Preprocesses Face ROI &amp;amp; Resizes to 128x128 Arrays&lt;/div&gt;&lt;div&gt;4. Executes Forward Pass (ONNX Runtime CPU Inference Session)&amp;nbsp;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="100" width="402.5" x="183.75" y="600" as="geometry" />
+        </mxCell>
+        <mxCell id="G02KTmdfzVyyEF8a8Sc3-9" parent="1" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=3;fontSize=13;fontStyle=1" value="(worker.start())" vertex="1">
+          <mxGeometry height="40" width="120" x="407.5" y="405" as="geometry" />
+        </mxCell>
+        <mxCell id="G02KTmdfzVyyEF8a8Sc3-17" edge="1" parent="1" source="G02KTmdfzVyyEF8a8Sc3-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;strokeWidth=3;fontSize=13;" target="G02KTmdfzVyyEF8a8Sc3-3">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="620" y="715" />
+              <mxPoint x="620" y="180" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="G02KTmdfzVyyEF8a8Sc3-10" parent="1" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=3;fontSize=13;" value="emits worker.frame_ready(frame)" vertex="1">
+          <mxGeometry height="30" width="220" x="370" y="700" as="geometry" />
+        </mxCell>
+        <mxCell id="G02KTmdfzVyyEF8a8Sc3-18" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;strokeWidth=3;fontSize=13;" target="G02KTmdfzVyyEF8a8Sc3-3">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="620" y="760" />
+              <mxPoint x="620" y="180" />
+            </Array>
+            <mxPoint x="550" y="760" as="sourcePoint" />
+            <mxPoint x="617.5" y="189.99999999999994" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="G02KTmdfzVyyEF8a8Sc3-11" parent="1" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=3;fontSize=13;" value="emits worker.results_ready(emotion, confidence)" vertex="1">
+          <mxGeometry height="30" width="285" x="335" y="750" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

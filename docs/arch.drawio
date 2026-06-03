@@ -1,0 +1,48 @@
+<mxfile host="Electron">
+  <diagram name="Page-1" id="_PPdKt0Dwn5k9fpgRXAq">
+    <mxGraphModel dx="1571" dy="934" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="o2NMCrmDhiKRFFUXDgdA-122" edge="1" parent="1" source="o2NMCrmDhiKRFFUXDgdA-94" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="474" y="630" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="o2NMCrmDhiKRFFUXDgdA-200" edge="1" parent="1" source="o2NMCrmDhiKRFFUXDgdA-194" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=13;" target="o2NMCrmDhiKRFFUXDgdA-195">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="o2NMCrmDhiKRFFUXDgdA-194" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontSize=13;" value="&lt;b&gt;Webcam / Image Upload&lt;/b&gt;&lt;div&gt;Live DirectShow Video Feed Capture (1280x720)&lt;/div&gt;&lt;div&gt;Static Local File System Array Upload&amp;nbsp;&amp;nbsp;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="81" width="315" x="430" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="o2NMCrmDhiKRFFUXDgdA-201" edge="1" parent="1" source="o2NMCrmDhiKRFFUXDgdA-195" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=13;" target="o2NMCrmDhiKRFFUXDgdA-196">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="o2NMCrmDhiKRFFUXDgdA-195" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontSize=13;" value="&lt;b&gt;YuNet Face Detection&lt;/b&gt;&lt;div&gt;Deep Learning Face Bounding Box Extraction&lt;/div&gt;&lt;div&gt;Confidence Threshold Filter Setup (0.50)&lt;/div&gt;" vertex="1">
+          <mxGeometry height="81" width="315" x="430" y="200" as="geometry" />
+        </mxCell>
+        <mxCell id="o2NMCrmDhiKRFFUXDgdA-202" edge="1" parent="1" source="o2NMCrmDhiKRFFUXDgdA-196" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=13;" target="o2NMCrmDhiKRFFUXDgdA-197">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="o2NMCrmDhiKRFFUXDgdA-196" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontSize=13;" value="&lt;b&gt;Preprocessing&lt;/b&gt;&lt;div&gt;Spatial Downscaling to 128x128x3 Resolution&lt;/div&gt;&lt;div&gt;Color Conversion (BGR to RGB Layout)&lt;/div&gt;&lt;div&gt;ImageNet Mean and Standard Deviation Scaling&amp;nbsp;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="81" width="315" x="430" y="320" as="geometry" />
+        </mxCell>
+        <mxCell id="o2NMCrmDhiKRFFUXDgdA-203" edge="1" parent="1" source="o2NMCrmDhiKRFFUXDgdA-197" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=13;" target="o2NMCrmDhiKRFFUXDgdA-198">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="o2NMCrmDhiKRFFUXDgdA-197" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontSize=13;" value="&lt;b&gt;ONNX Model&lt;/b&gt;&lt;div&gt;EfficientNetV2-S Quantized Inference Graph&lt;/div&gt;&lt;div&gt;Asynchronous Execution on CPU Engine Provider&lt;br&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="81" width="315" x="430" y="440" as="geometry" />
+        </mxCell>
+        <mxCell id="o2NMCrmDhiKRFFUXDgdA-204" edge="1" parent="1" source="o2NMCrmDhiKRFFUXDgdA-198" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=13;" target="o2NMCrmDhiKRFFUXDgdA-199">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="o2NMCrmDhiKRFFUXDgdA-198" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontSize=13;" value="&lt;br&gt;&lt;b&gt;Emotion Prediction&lt;/b&gt;&lt;div&gt;Raw Softmax Classification Class Extraction&lt;/div&gt;&lt;div&gt;30-Frame Rolling Queue Temporal Mode Filtering    &lt;br&gt;&lt;br&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="81" width="315" x="430" y="560" as="geometry" />
+        </mxCell>
+        <mxCell id="o2NMCrmDhiKRFFUXDgdA-199" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontSize=13;" value="&lt;b&gt;GUI Output&lt;/b&gt;&lt;div&gt;Scaled Adaptive QLabel Canvas Frame Rendering&lt;/div&gt;&lt;div&gt;Active Text Metric Field Refreshing&lt;/div&gt;&lt;div&gt;Console System Log File Handler Updates&lt;br&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="81" width="315" x="430" y="680" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

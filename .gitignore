@@ -2,3 +2,9 @@ venv
 outputs
 __pycache__
 *.log
+dist
+build
+*.onnx
+*.data
+*.keras
+*.pth
